@@ -14,9 +14,10 @@ dicrps = {'rock': 'paper', 'paper': 'scissors', 'scissors': 'rock'}
 humscore = 0
 aiscore = 0
 x = 0
+y=0
 timerstart = 5
 countdown = 5
-
+img = cv2.imread('test.jpeg')
 
 
 
@@ -56,15 +57,15 @@ while True:
                 result_str = choices[int(result_num[1])]
                 text = [(f"Your choice is {result_str}\npress 's' to play\nHuman:{humscore} Machine: {aiscore}"),
                         (f"Get ready, {int(countdown)}")]
-                imageText = frame.copy()
-                    
+                
+                imageText = [frame.copy(),img]    
                 font = cv2.FONT_HERSHEY_PLAIN
                 color = (255, 0, 0) 
                 fontsize = 1
             
                 position = (50, 50)
-                cv2.putText(imageText, text[x], position, font, fontsize, color=color)
-                cv2.imshow("Rock, Paper, Scissors", imageText)
+                cv2.putText(imageText[y], text[x], position, font, fontsize, color=color)
+                cv2.imshow("Rock, Paper, Scissors", imageText[y])
                 if cv2.waitKey(1) & 0xFF == ord('s'):
                     timerstart = time.time()
                     x = 1
@@ -74,5 +75,8 @@ while True:
                     start() 
                     timerstart = 5
                     x=0
+                    y=1
+                    
+                    
      
    
