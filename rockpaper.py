@@ -7,8 +7,6 @@ import random
 
 model = load_model('keras_model.h5')
 cap = cv2.VideoCapture(0)
-print(cap.get(3))
-print(cap.get(4))
 data = np.ndarray(shape=(1, 224, 224, 3), dtype=np.float32)
 
 choices = ['rock','paper','scissors','null']
@@ -68,13 +66,6 @@ def mouse(action,a,b, flags, *userdata):
    
 while True:     
                 ret, frame = cap.read()
-
-                b_channel, g_channel, r_channel = cv2.split(frame)
-
-                alpha_channel = np.ones(b_channel.shape, dtype=b_channel.dtype) * 50 #creating a dummy alpha channel image.
-
-                img_BGRA = cv2.merge((b_channel, g_channel, r_channel, alpha_channel))
-
                 resized_frame = cv2.resize(frame, (224, 224), interpolation = cv2.INTER_AREA)
                 image_np = np.array(resized_frame)
                 normalized_image = (image_np.astype(np.float32) / 127.0) - 1 # Normalize the image
@@ -114,10 +105,10 @@ while True:
                         aiscore = 0
                         humscore = 0
                         x = 0
-                        
+                #q to quit        
                 if cv2.waitKey(1) & 0xFF == ord('q'):
                     break
-                    #cv2.destroyAllWindows()
+                    
                 countdown = timerstart-time.time()+5
                 if int(countdown) == 0:
                     humchoice = choices[int(result_num[1])]
@@ -127,12 +118,12 @@ while True:
                         start() 
                         timerstart = 5
                         x=3
+                #when one player reaches 3, game ends
                 if aiscore == 3: 
                         x = 4
                 if humscore == 3:
                         x = 5
-  ##To do: use 'switches' to manage the images and text display.Start with a landing pad, after countdown have a "You win, you chose rock etc" pic, press to play again.
-  # Then have a first to 5.                
+             
      
 # After the loop release the cap object
 cap.release()
