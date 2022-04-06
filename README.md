@@ -82,7 +82,7 @@ This code was used to interact with the model, to produce an opencv window and p
 ## Milestone 3: Integrated Milestones 1 & 2
 The two scripts were combined, the model's most likely result replaced the keyboard input used in milestone 1.
 
-## Milestone 4 Features added to create a user-friednly application
+## Milestone 4 Features added to create a user-friendly application
 Through hand gestures, keyboard and mouse input, the player can navigate the game and play to a best of 3 against the computer.
 The player is first greeted with a landing page indicating how to use the program:
 ![landing page](landingpage2.jpg)
