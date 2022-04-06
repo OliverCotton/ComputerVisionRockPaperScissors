@@ -54,7 +54,7 @@ def start():
 def mouse(action,a,b, flags, *userdata):
     global x,y, timerstart
     if action == cv2.EVENT_FLAG_LBUTTON and y==1:
-        print(a,b)
+        
         if 280 > a > 150 and 375 > b > 350:
             y = 0
             x = 0
