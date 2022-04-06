@@ -5,49 +5,76 @@ import time
 import random
 
 
-model = load_model('/home/oliver/Documents/rock paper/ComputerVisionRockPaperScissors/ComputerVisionRockPaperScissors/keras_model.h5')
+model = load_model('keras_model.h5')
 cap = cv2.VideoCapture(0)
+print(cap.get(3))
+print(cap.get(4))
 data = np.ndarray(shape=(1, 224, 224, 3), dtype=np.float32)
 
 choices = ['rock','paper','scissors','null']
 dicrps = {'rock': 'paper', 'paper': 'scissors', 'scissors': 'rock'}
 humscore = 0
 aiscore = 0
-x = 0
-y=0
+x = 2
+y=1
 timerstart = 5
 countdown = 5
-img = cv2.imread('test.jpeg')
+landingpage = cv2.imread('landingpage2.jpg')
 
+
+round_num = 1
+result = ("It's a draw!", "AI wins!", "You win!")
+ires = 0
+humchoice, aichoice = "", ""
 
 
 class rpsgame:
 
     def rpsround(humchoice):
-        aichoice = random.choice(choices)
-        #print(aichoice)
+        global aichoice, ires
+        aichoice = random.choice(choices[0:3])
         if humchoice == aichoice:
-            print("draw")
+            ires=0
+            return ires
         elif humchoice == dicrps.get(aichoice):
             global humscore
             humscore += 1
-            return humscore
+            ires = 2
+            return humscore, ires
         else:
             global aiscore
             aiscore += 1
-            return aiscore
+            ires = 1
+            return aiscore, ires
 
 def start():
+        global round_num
+        round_num += 1
         game = rpsgame()
         rpsgame.rpsround(humchoice)
 
-
+def mouse(action,a,b, flags, *userdata):
+    global x,y, timerstart
+    if action == cv2.EVENT_FLAG_LBUTTON and y==1:
+        print(a,b)
+        if 280 > a > 150 and 375 > b > 350:
+            y = 0
+            x = 0
+            
+        
 
 
 
    
 while True:     
                 ret, frame = cap.read()
+
+                b_channel, g_channel, r_channel = cv2.split(frame)
+
+                alpha_channel = np.ones(b_channel.shape, dtype=b_channel.dtype) * 50 #creating a dummy alpha channel image.
+
+                img_BGRA = cv2.merge((b_channel, g_channel, r_channel, alpha_channel))
+
                 resized_frame = cv2.resize(frame, (224, 224), interpolation = cv2.INTER_AREA)
                 image_np = np.array(resized_frame)
                 normalized_image = (image_np.astype(np.float32) / 127.0) - 1 # Normalize the image
@@ -55,28 +82,59 @@ while True:
                 prediction = model.predict(data)
                 result_num = np.where(prediction == np.amax(prediction))
                 result_str = choices[int(result_num[1])]
-                text = [(f"Your choice is {result_str}\npress 's' to play\nHuman:{humscore} Machine: {aiscore}"),
-                        (f"Get ready, {int(countdown)}")]
-                
-                imageText = [frame.copy(),img]    
+                text = [(f"'s' to start round {round_num} The score is Human:{humscore} Machine: {aiscore}"),
+                        (f"Get ready, {int(countdown)}"),
+                        "",
+                        (f"You played {humchoice}, machine played {aichoice}.{result[ires]} 's' to continue..."),
+                        (f"You lose! Human:{humscore} Machine: {aiscore}  Try again? (s) or quit? (q)"),
+                        (f"You win! Human:{humscore} Machine: {aiscore}  Try again? (s) or quit? (q)"),
+                        (f"Choice wasn't registered, try again (s)")]
+
+                imageText = [frame.copy(),landingpage]    
                 font = cv2.FONT_HERSHEY_PLAIN
-                color = (255, 0, 0) 
+                color = (255, 255, 255) 
                 fontsize = 1
-            
-                position = (50, 50)
+                position = (5, 50)
+                
+                
                 cv2.putText(imageText[y], text[x], position, font, fontsize, color=color)
                 cv2.imshow("Rock, Paper, Scissors", imageText[y])
+                #on open screen mouse click proceeds to gameplay
+                if y == 1:
+                    cv2.setMouseCallback("Rock, Paper, Scissors", mouse)
+                #when s key pressed game, countdown starts
                 if cv2.waitKey(1) & 0xFF == ord('s'):
-                    timerstart = time.time()
-                    x = 1
+                    if x == 0 or x==6:
+                        timerstart = time.time()
+                        x = 1
+                    elif x== 3:
+                        x=0
+                    elif x == 4 or x==5:
+                        round_num = 1
+                        aiscore = 0
+                        humscore = 0
+                        x = 0
+                        
+                if cv2.waitKey(1) & 0xFF == ord('q'):
+                    break
+                    #cv2.destroyAllWindows()
                 countdown = timerstart-time.time()+5
                 if int(countdown) == 0:
                     humchoice = choices[int(result_num[1])]
-                    start() 
-                    timerstart = 5
-                    x=0
-                    y=1
-                    
-                    
+                    if humchoice == choices[3]:
+                        x=6
+                    else:
+                        start() 
+                        timerstart = 5
+                        x=3
+                if aiscore == 3: 
+                        x = 4
+                if humscore == 3:
+                        x = 5
+  ##To do: use 'switches' to manage the images and text display.Start with a landing pad, after countdown have a "You win, you chose rock etc" pic, press to play again.
+  # Then have a first to 5.                
      
-   
+# After the loop release the cap object
+cap.release()
+# Destroy all the windows
+cv2.destroyAllWindows()
