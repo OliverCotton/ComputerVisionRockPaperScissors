@@ -49,6 +49,7 @@ Put together a simple rock paper scissors game object with which a human player 
 Using the teachable machines standard image model tool ([teachable machines](https://teachablemachine.withgoogle.com/train/image)), I trained a model to recognise a rock, paper or scissors hand gesture as well as a null input.
 
 This code was used to interact with the model, to produce an opencv window and predict what the hand gesture the player is making:
+    
     `import cv2
     from keras.models import load_model
     import numpy as np
