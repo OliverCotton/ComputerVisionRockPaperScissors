@@ -50,7 +50,7 @@ def start():
         rpsround(humchoice)
 
 def mouse(action,a,b, flags, *userdata):
-    global x,y, timerstart
+    global x,y
     if action == cv2.EVENT_FLAG_LBUTTON and y==1:
         
         if 280 > a > 150 and 375 > b > 350:
