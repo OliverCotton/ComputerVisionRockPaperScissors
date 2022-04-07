@@ -4,25 +4,33 @@ import numpy as np
 import time
 import random
 
+#read landing page image
+landingpage = cv2.imread('files/landingpage2.jpg')
 
-model = load_model('keras_model.h5')
+#set up model, camera feed and data array
+model = load_model('files/keras_model.h5')
 cap = cv2.VideoCapture(0)
 data = np.ndarray(shape=(1, 224, 224, 3), dtype=np.float32)
 
+#lists of possible choices
 choices = ['rock','paper','scissors','null']
+#dictionary key-value pairs for {choice x : choice which would defeat x}
 dicrps = {'rock': 'paper', 'paper': 'scissors', 'scissors': 'rock'}
+#keep track of scores
 humscore = 0
 aiscore = 0
+#x and y control the text and image of the imshow function below
 x = 2
-y=1
+y = 1
+#define variables for countdown timer
 timerstart = 5
 countdown = 5
-landingpage = cv2.imread('landingpage2.jpg')
-
-
+#define variables for round number and text strings for who wins
 round_num = 1
 result = ("It's a draw!", "AI wins!", "You win!")
+#ires is index of result list
 ires = 0
+#define choice variables
 humchoice, aichoice = "", ""
 
 
@@ -51,16 +59,10 @@ def start():
 
 def mouse(action,a,b, flags, *userdata):
     global x,y
-    if action == cv2.EVENT_FLAG_LBUTTON and y==1:
-        
+    if action == cv2.EVENT_FLAG_LBUTTON and y==1:    
         if 280 > a > 150 and 375 > b > 350:
             y = 0
             x = 0
-            
-        
-
-
-
    
 while True:     
             ret, frame = cap.read()

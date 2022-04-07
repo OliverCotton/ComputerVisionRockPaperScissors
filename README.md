@@ -140,14 +140,14 @@ Events such as mouse clicks, or keyboard inputs modify the value of `x` (the ind
 Depending on the current value of `x`, the s key will start the countdown timer, progress to a different round of the game or restart the game with fresh scores:
 
 The player is then lead by text instructions which are presented at the top of the screen:
-![text instructions](screenshot.png)
+![text instructions](files/screenshot.png)
 
 Rather than using `putText`, `cv2.Overlay` could be used to overlay graphics telling the player the score, indicating what they had selected etc - however this slowed the framerate and the production of professional looking graphics was beyond the scope of this project, and so this aproach was eventually rejected.
 
 Similarly the variable `y` alters the image opencv presents in the window, between a landing page introducing the player to the game, and the feed from the webcam refreshed in a while loop. 
 
 The player is first greeted with a landing page indicating how to use the program:
-![landing page](landingpage2.jpg)
+![landing page](files/landingpage2.jpg)
 
 This code handles the mouse click event:
     
